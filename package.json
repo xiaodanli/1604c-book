@@ -1,0 +1,26 @@
+{
+    "name": "1604c-book",
+    "version": "1.0.0",
+    "description": "1604c-book",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "gulp dev"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/xiaodanli/1604c-book.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/xiaodanli/1604c-book/issues"
+    },
+    "homepage": "https://github.com/xiaodanli/1604c-book#readme",
+    "devDependencies": {
+        "gulp": "^3.9.1",
+        "gulp-autoprefixer": "^5.0.0",
+        "gulp-sass": "^4.0.1",
+        "gulp-webserver": "^0.9.1"
+    }
+}
