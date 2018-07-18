@@ -6,10 +6,133 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <script src="./js/libs/flexible.js"></script>
+    <link rel="stylesheet" href="./css/common.css">
+    <link rel="stylesheet" href="./css/swiper-3.4.2.min.css">
+    <link rel="stylesheet" href="./css/index.css">
 </head>
 
 <body>
-    <div class="wrap">dd</div>
+    <div class="wrap">
+        <!-- header 开始-->
+        <header>
+            <span class="icon-sign"></span>
+            <div class="tab-wrap">
+                <span class="tab-item active">书城</span>
+                <span class="tab-item">书架</span>
+                <div class="line"></div>
+            </div>
+            <span class="icon-person"></span>
+        </header>
+        <!-- header 结束 -->
+
+        <!-- 内容 开始 -->
+        <div class="content">
+            <div class="swiper-container wrap-swiper swiper-no-swiping">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide book-city">
+                        <div up="上拉加载" down="下拉刷新">
+                            <!-- index top -->
+                            <section class="block">
+                                <!-- search-link  -->
+                                <div class="search-link">
+                                    <a href="./page/search.html" class="not-ipt">请输入书名作者关键字</a>
+                                </div>
+                                <!-- search-link  -->
+
+                                <!-- banner swiper -->
+                                <div class="swiper-container banner-wrap">
+                                    <div class="swiper-wrapper banner"></div>
+                                </div>
+
+                                <!-- banner swiper -->
+
+                                <div class="types"></div>
+
+                            </section>
+                            <!-- index top -->
+
+                            <!-- 本周最火 -->
+                            <section class="block">
+                                <h1 class="title">本周最火</h1>
+                                <ul class="top-list hot"></ul>
+                            </section>
+                            <!-- 本周最火 -->
+
+                            <!-- 重磅推荐 -->
+                            <section class="block">
+                                <h1>重磅推荐</h1>
+                                <ul class="book-l-r-list recommed"></ul>
+                                <button class="change-btn">换一换</button>
+                            </section>
+
+                            <!-- 重磅推荐 -->
+
+                            <!-- 推荐数据 loadmore -->
+                            <section class="block">
+                                <ul class="book-l-r-list loadmore"></ul>
+                            </section>
+                            <!-- 推荐数据 loadmore -->
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <!-- search-link -->
+                        <div class="search-link">
+                            <a href="#" class="not-ipt">请输入书名作者关键字</a>
+                            <div class="switch-btn"></div>
+                        </div>
+                        <!-- search-link -->
+
+                        <ul class="shelf-list">
+                            <li>
+                                <dl>
+                                    <dt>
+                                        <img src="./imgs/book1.jpg" alt="">
+                                    </dt>
+                                    <dd>
+                                        <h2>书名</h2>
+                                        <span class="" authors>作者</span>
+                                        <span>读到某章</span>
+                                    </dd>
+                                </dl>
+                            </li>
+                            <li>
+                                <dl>
+                                    <dt>
+                                            <img src="./imgs/book1.jpg" alt="">
+                                        </dt>
+                                    <dd>
+                                        <h2>书名</h2>
+                                        <span class="" authors>作者</span>
+                                        <span>读到某章</span>
+                                    </dd>
+                                </dl>
+                            </li>
+                            <li>
+                                <dl>
+                                    <dt>
+                                                <img src="./imgs/book1.jpg" alt="">
+                                            </dt>
+                                    <dd>
+                                        <h2>书名</h2>
+                                        <span class="" authors>作者</span>
+                                        <span>读到某章</span>
+                                    </dd>
+                                </dl>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 内容结束 -->
+    </div>
+    <script src="./js/libs/require.js"></script>
+    <script>
+        require(['./js/main.js'], function() {
+            require(['index'])
+        })
+    </script>
 </body>
 
 </html>

@@ -12,11 +12,16 @@ var path = require('path');
 
 var fs = require('fs');
 
+var mock = require('./data');
+
+var querystring = require('querystring');
+
 //开发环境  起服务
 gulp.task('devServer', ['devSass'], function() {
     gulp.src('src')
         .pipe(server({
             port: 9090,
+            host: '169.254.204.130',
             middleware: function(req, res, next) {
                 var pathname = url.parse(req.url).pathname;
 
@@ -24,8 +29,10 @@ gulp.task('devServer', ['devSass'], function() {
                     return false
                 }
 
-                if (pathname === '/api/index') {
-
+                var unescapeUrl = querystring.unescape(req.url);
+                console.log(unescapeUrl)
+                if (/\/api/g.test(pathname)) {
+                    res.end(JSON.stringify({ code: 1, data: mock(unescapeUrl) }))
                 } else {
                     pathname = pathname === '/' ? '/index.html' : pathname;
                     res.end(fs.readFileSync(path.join(__dirname, 'src', pathname)))
