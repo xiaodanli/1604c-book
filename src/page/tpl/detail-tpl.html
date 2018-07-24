@@ -1,0 +1,38 @@
+<script id="detail-template" type="text/x-handlebars-template">
+    <dl class="book-detail-con">
+        <dt>
+            <img src="{{cover}}">
+        </dt>
+        <dd>
+            <h3>{{title}}</h3>
+            <p class="author">{{authors}}</p>
+            <div class="u-grade">
+                <div class="grade grade8"></div>
+                <span class="read">{{score_count}}个评价</span>
+            </div>
+            <p class="price">价格：{{price}}书币/千字</p>
+            <p class="count">字数：{{word_count}}字<span class="booktag green-booktag">{{#if finish}}完结{{else}}连载中{{/if}}</span></p>
+        </dd>
+    </dl>
+    <div class="btn-group">
+        <button class="btn orange-btn" id="start-btn">开始阅读</button>
+        <button class="btn">下载</button>
+    </div>
+    <p class="brief">
+        {{content}}
+    </p>
+    <div class="group-footer">
+        <a href="chapter-list.html?fiction_id={{fiction_id}}">最新：{{latest}}</a>
+    </div>
+</script>
+
+<script id="tag-template" type="text/x-handlebars-template">
+    {{#each tags}}
+    <li class="tag">{{this}}</li>
+    {{/each}}
+</script>
+
+<script id="copyright-template" type="text/x-handlebars-template">
+    <p>图书信息</p>
+    <p>版权：{{rights}}</p>
+</script>

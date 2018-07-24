@@ -1,4 +1,4 @@
-require(['jquery', 'swiper', 'bscroll', 'GetSlideDirection', 'render', 'text!bookTB', 'text!indexTpl', 'text!bookLR'], function($, swiper, bscroll, GetSlideDirection, render, bookTB, indexTpl, bookLR) {
+require(['jquery', 'swiper', 'bscroll', 'GetSlideDirection', 'render', 'text!bookTB', 'text!indexTpl', 'text!bookLR', 'storage'], function($, swiper, bscroll, GetSlideDirection, render, bookTB, indexTpl, bookLR, storage) {
     console.log(bookTB);
 
     $('body').append(indexTpl);
@@ -16,7 +16,7 @@ require(['jquery', 'swiper', 'bscroll', 'GetSlideDirection', 'render', 'text!boo
         click: true
     });
 
-    //     44        x
+    //   44            x
     // ------  =   --------
     // 37.5           64   
     var htmlFz = document.getElementsByTagName('html')[0].style.fontSize;
@@ -83,7 +83,7 @@ require(['jquery', 'swiper', 'bscroll', 'GetSlideDirection', 'render', 'text!boo
     }
 
     //实例化wrap-swiper
-    var wrapSwiper = new swiper('.wrap-swiper');
+    var wrapSwiper;
 
     //滑动处理
     var startX, startY;
@@ -204,6 +204,11 @@ require(['jquery', 'swiper', 'bscroll', 'GetSlideDirection', 'render', 'text!boo
         }
 
         render("#recommend-tpl", ".recommed", recommendData[0], true);
+
+        $('.content').show();
+
+        wrapSwiper = new swiper('.wrap-swiper');
+
         cityScroll.refresh();
 
     }
@@ -221,6 +226,35 @@ require(['jquery', 'swiper', 'bscroll', 'GetSlideDirection', 'render', 'text!boo
 
     $(".switch-btn").on("click", function() {
         $(".shelf-list").toggleClass("change-style");
+    })
+
+    //点击类别
+    $('.types').on('click', 'dl', function() {
+        var txt = $(this).find('dd').text();
+        var type;
+        if (txt == '女生') {
+            type = 'female';
+        } else if (txt == '男生') {
+            type = 'man'
+        }
+        location.href = '../../page/list.html?type=' + type;
+    })
+
+    //点击hot 列表
+    $('.hot').on('click', 'li', function() {
+        var fiction_id = $(this).attr('data-id');
+
+        location.href = '../../page/detail.html?fiction_id=' + fiction_id;
+    })
+
+    //
+    $('.icon-person').on('click', function() {
+        var code = storage.get('code') || 0;
+        if (code) {
+            location.href = '../../page/my.html';
+        } else {
+            location.href = '../../page/login.html';
+        }
     })
 
 })

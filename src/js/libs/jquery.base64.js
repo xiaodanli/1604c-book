@@ -1,123 +1,93 @@
 /*!
- * jquery.base64.js 0.0.3 - https://github.com/yckart/jquery.base64.js
- * Makes Base64 en & -decoding simpler as it is.
- *
- * Based upon: https://gist.github.com/Yaffle/1284012
+ * jquery.base64.js 0.1 - https://github.com/yckart/jquery.base64.js
+ * Base64 en & -decoding
  *
  * Copyright (c) 2012 Yannick Albert (http://yckart.com)
  * Licensed under the MIT license (http://www.opensource.org/licenses/mit-license.php).
  * 2013/02/10
  **/
-;(function($) {
+;(function($){
+    $.base64 = $.fn.base64 = function (dir, input) {
 
-    var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
-        a256 = '',
-        r64 = [256],
-        r256 = [256],
-        i = 0;
+        var publ = {},
+            self = this,
+            b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 
-    var UTF8 = {
+        // http://phpjs.org/functions/base64_encode/
+        publ.encode = function (data) {
+            data = !(self instanceof $) ? data : self.is(':input') ? self.val() : self.text();
+            data = unescape(encodeURIComponent( data ));
 
-        /**
-         * Encode multi-byte Unicode string into utf-8 multiple single-byte characters
-         * (BMP / basic multilingual plane only)
-         *
-         * Chars in range U+0080 - U+07FF are encoded in 2 chars, U+0800 - U+FFFF in 3 chars
-         *
-         * @param {String} strUni Unicode string to be encoded as UTF-8
-         * @returns {String} encoded string
-         */
-        encode: function(strUni) {
-            // use regular expressions & String.replace callback function for better efficiency
-            // than procedural approaches
-            var strUtf = strUni.replace(/[\u0080-\u07ff]/g, // U+0080 - U+07FF => 2 bytes 110yyyyy, 10zzzzzz
-            function(c) {
-                var cc = c.charCodeAt(0);
-                return String.fromCharCode(0xc0 | cc >> 6, 0x80 | cc & 0x3f);
-            })
-            .replace(/[\u0800-\uffff]/g, // U+0800 - U+FFFF => 3 bytes 1110xxxx, 10yyyyyy, 10zzzzzz
-            function(c) {
-                var cc = c.charCodeAt(0);
-                return String.fromCharCode(0xe0 | cc >> 12, 0x80 | cc >> 6 & 0x3F, 0x80 | cc & 0x3f);
-            });
-            return strUtf;
-        },
+            if (data === '') return;
+            var o1, o2, o3, h1, h2, h3, h4, bits, i = 0,
+                ac = 0,
+                enc = "",
+                tmp_arr = [];
 
-        /**
-         * Decode utf-8 encoded string back into multi-byte Unicode characters
-         *
-         * @param {String} strUtf UTF-8 string to be decoded back to Unicode
-         * @returns {String} decoded string
-         */
-        decode: function(strUtf) {
-            // note: decode 3-byte chars first as decoded 2-byte strings could appear to be 3-byte char!
-            var strUni = strUtf.replace(/[\u00e0-\u00ef][\u0080-\u00bf][\u0080-\u00bf]/g, // 3-byte chars
-            function(c) { // (note parentheses for precence)
-                var cc = ((c.charCodeAt(0) & 0x0f) << 12) | ((c.charCodeAt(1) & 0x3f) << 6) | (c.charCodeAt(2) & 0x3f);
-                return String.fromCharCode(cc);
-            })
-            .replace(/[\u00c0-\u00df][\u0080-\u00bf]/g, // 2-byte chars
-            function(c) { // (note parentheses for precence)
-                var cc = (c.charCodeAt(0) & 0x1f) << 6 | c.charCodeAt(1) & 0x3f;
-                return String.fromCharCode(cc);
-            });
-            return strUni;
-        }
-    };
+            if (!data) return data;
 
-    while(i < 256) {
-        var c = String.fromCharCode(i);
-        a256 += c;
-        r256[i] = i;
-        r64[i] = b64.indexOf(c);
-        ++i;
-    }
+            do { // pack three octets into four hexets
+                o1 = data.charCodeAt(i++);
+                o2 = data.charCodeAt(i++);
+                o3 = data.charCodeAt(i++);
 
-    function code(s, discard, alpha, beta, w1, w2) {
-        s = String(s);
-        var buffer = 0,
-            i = 0,
-            length = s.length,
-            result = '',
-            bitsInBuffer = 0;
+                bits = o1 << 16 | o2 << 8 | o3;
 
-        while(i < length) {
-            var c = s.charCodeAt(i);
-            c = c < 256 ? alpha[c] : -1;
+                h1 = bits >> 18 & 0x3f;
+                h2 = bits >> 12 & 0x3f;
+                h3 = bits >> 6 & 0x3f;
+                h4 = bits & 0x3f;
 
-            buffer = (buffer << w1) + c;
-            bitsInBuffer += w1;
+                // use hexets to index into b64, and append result to encoded string
+                tmp_arr[ac++] = b64.charAt(h1) + b64.charAt(h2) + b64.charAt(h3) + b64.charAt(h4);
+            } while (i < data.length);
 
-            while(bitsInBuffer >= w2) {
-                bitsInBuffer -= w2;
-                var tmp = buffer >> bitsInBuffer;
-                result += beta.charAt(tmp);
-                buffer ^= tmp << bitsInBuffer;
-            }
-            ++i;
-        }
-        if(!discard && bitsInBuffer > 0) result += beta.charAt(buffer << (w2 - bitsInBuffer));
-        return result;
-    }
+            enc = tmp_arr.join('');
 
-    var Plugin = $.base64 = function(dir, input, encode) {
-            return input ? Plugin[dir](input, encode) : dir ? null : this;
+            var r = data.length % 3;
+
+            return (r ? enc.slice(0, r - 3) : enc) + '==='.slice(r || 3);
         };
 
-    Plugin.btoa = Plugin.encode = function(plain, utf8encode) {
-        plain = Plugin.raw === false || Plugin.utf8encode || utf8encode ? UTF8.encode(plain) : plain;
-        plain = code(plain, false, r256, b64, 8, 6);
-        return plain + '===='.slice((plain.length % 4) || 4);
-    };
+        // http://phpjs.org/functions/base64_decode/
+        publ.decode = function (data) {
+            data = !(self instanceof $) ? data : self.is(':input') ? self.val() : self.text();
 
-    Plugin.atob = Plugin.decode = function(coded, utf8decode) {
-        coded = coded.replace(/[^A-Za-z0-9\+\/\=]/g, "");
-        coded = String(coded).split('=');
-        var i = coded.length;
-        do {--i;
-            coded[i] = code(coded[i], true, r64, a256, 6, 8);
-        } while (i > 0);
-        coded = coded.join('');
-        return Plugin.raw === false || Plugin.utf8decode || utf8decode ? UTF8.decode(coded) : coded;
+            var o1, o2, o3, h1, h2, h3, h4, bits, i = 0,
+                ac = 0,
+                dec = "",
+                tmp_arr = [];
+
+            if (!data) return data;
+
+            data += '';
+
+            do { // unpack four hexets into three octets using index points in b64
+                h1 = b64.indexOf(data.charAt(i++));
+                h2 = b64.indexOf(data.charAt(i++));
+                h3 = b64.indexOf(data.charAt(i++));
+                h4 = b64.indexOf(data.charAt(i++));
+
+                bits = h1 << 18 | h2 << 12 | h3 << 6 | h4;
+
+                o1 = bits >> 16 & 0xff;
+                o2 = bits >> 8 & 0xff;
+                o3 = bits & 0xff;
+
+                if (h3 == 64) {
+                    tmp_arr[ac++] = String.fromCharCode(o1);
+                } else if (h4 == 64) {
+                    tmp_arr[ac++] = String.fromCharCode(o1, o2);
+                } else {
+                    tmp_arr[ac++] = String.fromCharCode(o1, o2, o3);
+                }
+            } while (i < data.length);
+
+            dec = tmp_arr.join('');
+
+            return decodeURIComponent(escape( dec ));
+        };
+
+        return input ? publ[dir](input) : dir ? null : publ;
     };
 }(jQuery));

@@ -305,3 +305,16 @@ body {
 
 .none {
   display: none; }
+
+.chapter-wrap {
+  flex: 1;
+  overflow: hidden; }
+  .chapter-wrap .chapter-list {
+    width: 100%; }
+    .chapter-wrap .chapter-list li {
+      line-height: 1.17333rem;
+      border-bottom: 1px solid #ddd;
+      padding: 0 0.4rem;
+      color: #555; }
+      .chapter-wrap .chapter-list li.active {
+        color: #f35d02; }

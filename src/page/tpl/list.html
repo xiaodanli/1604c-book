@@ -1,0 +1,25 @@
+<script type="text/x-handlebars-template" id="list-tpl">
+    {{#each this}}
+    <section class="block">
+        <h1 class='title'>{{ad_name}}</h1>
+        <ul class="search-list">
+            {{#each data.data}}
+            <li>
+                <a href="#">
+                    <div class="book-cover">
+                        <img src="../../imgs/default-img.jpg" data-original="{{cover}}">
+                    </div>
+                    <div class="book-info">
+                        <p>{{title}}</p>
+                        <p class="summary">{{summary}}</p>
+                        <div class="book-btm">
+                            <p class="author">{{authors}}</p>
+                        </div>
+                    </div>
+                </a>
+            </li>
+            {{/each}}
+        </ul>
+    </section>
+    {{/each}}
+</script>

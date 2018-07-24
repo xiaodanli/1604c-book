@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../js/libs/flexible.js"></script>
+    <link rel="stylesheet" href="../css/detail.css">
+</head>
+
+<body>
+    <div class="wrap">
+        <header>
+            <span class="icon-back"></span>
+            <div class="title">详情</div>
+            <a class="icon-home" href="../../index.html"></a>
+        </header>
+        <div class="content">
+            <div class="inner-content" id="detail-wrap">
+                <!-- 书的详情 -->
+                <section class="block" id="detail"></section>
+
+                <!-- 类别标签 -->
+                <section class="block">
+                    <h3 class="type-title">类别标签</h3>
+                    <ul class="type-tags"></ul>
+
+                </section>
+                <!-- 作者其他书籍 -->
+                <section class="block">
+                    <ul class="top-list" id="other-list"></ul>
+                </section>
+                <!-- 版权信息 -->
+                <section class="copyright"></section>
+
+
+            </div>
+        </div>
+    </div>
+    <script src="../js/libs/require.js"></script>
+    <script>
+        require(['../js/main.js'], function() {
+            require(['detail'])
+        })
+    </script>
+</body>
+
+</html>

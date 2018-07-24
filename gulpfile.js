@@ -16,6 +16,20 @@ var mock = require('./data');
 
 var querystring = require('querystring');
 
+var userList = [{
+        username: 'lixd',
+        pwd: 123
+    },
+    {
+        username: 'zjb',
+        pwd: 456
+    },
+    {
+        username: 'lmf',
+        pwd: 000
+    }
+];
+
 //开发环境  起服务
 gulp.task('devServer', ['devSass'], function() {
     gulp.src('src')
@@ -31,7 +45,30 @@ gulp.task('devServer', ['devSass'], function() {
 
                 var unescapeUrl = querystring.unescape(req.url);
                 console.log(unescapeUrl)
-                if (/\/api/g.test(pathname)) {
+
+                if (pathname === '/api/login') {
+                    var chunkArr = [];
+                    req.on('data', function(chunk) {
+                        chunkArr.push(chunk);
+                    })
+
+                    req.on('end', function() {
+                        var params = querystring.parse(Buffer.concat(chunkArr).toString());
+
+                        console.log(params);
+
+                        var isHas = userList.some(function(item) {
+                            return item.username == params.username && item.pwd == params.pwd
+                        })
+
+                        if (isHas) {
+                            res.end(JSON.stringify({ code: 1, msg: '登录成功' }));
+                        } else {
+                            res.end(JSON.stringify({ code: 0, msg: '登录失败' }));
+                        }
+
+                    })
+                } else if (/\/api/g.test(pathname)) {
                     res.end(JSON.stringify({ code: 1, data: mock(unescapeUrl) }))
                 } else {
                     pathname = pathname === '/' ? '/index.html' : pathname;
