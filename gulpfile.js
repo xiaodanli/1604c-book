@@ -16,6 +16,10 @@ var mock = require('./data');
 
 var querystring = require('querystring');
 
+var clean = require('gulp-clean-css');
+
+var uglify = require('gulp-uglify');
+
 var userList = [{
         username: 'lixd',
         pwd: 123
@@ -32,7 +36,11 @@ var userList = [{
 
 //开发环境  起服务
 gulp.task('devServer', ['devSass'], function() {
-    gulp.src('src')
+    serverFun('src');
+})
+
+function serverFun(serverPath) {
+    return gulp.src(serverPath)
         .pipe(server({
             port: 9090,
             host: '169.254.204.130',
@@ -72,21 +80,26 @@ gulp.task('devServer', ['devSass'], function() {
                     res.end(JSON.stringify({ code: 1, data: mock(unescapeUrl) }))
                 } else {
                     pathname = pathname === '/' ? '/index.html' : pathname;
-                    res.end(fs.readFileSync(path.join(__dirname, 'src', pathname)))
+                    res.end(fs.readFileSync(path.join(__dirname, serverPath, pathname)))
                 }
             }
         }))
-})
+}
 
 
 //开发环境 编译sass
 
 gulp.task('devSass', function() {
+    css('./src/css')
+})
+
+function css(cssPath) {
     return gulp.src('./src/scss/*.scss')
         .pipe(sass())
         .pipe(autoprefixer())
-        .pipe(gulp.dest('./src/css'))
-})
+        .pipe(clean())
+        .pipe(gulp.dest(cssPath))
+}
 
 //监听scss
 
@@ -95,3 +108,45 @@ gulp.task('watch', function() {
 })
 
 gulp.task('dev', ['devServer', 'watch'])
+
+
+//打包上线
+gulp.task('buildCss', function() {
+    css('./build/css')
+})
+
+gulp.task('copyCss', function() {
+    gulp.src('./src/css/swiper-3.4.2.min.css')
+        .pipe(gulp.dest('./build/css'))
+})
+
+gulp.task('copyImg', function() {
+    gulp.src('./src/imgs/*.{jpg,png}')
+        .pipe(gulp.dest('./build/imgs'))
+})
+
+//上线js
+
+gulp.task('buildJs', function() {
+    gulp.src('./src/js/{common,app}/*.js')
+        .pipe(uglify())
+        .pipe(gulp.dest('./build/js'))
+})
+
+gulp.task('copyJs', function() {
+    gulp.src(['./src/js/**/*.js', '!./src/js/{common,app}/*.js'])
+        .pipe(gulp.dest('./build/js'))
+})
+
+gulp.task('buildHtml', function() {
+    gulp.src('./src/**/*.html')
+        .pipe(gulp.dest('./build'))
+})
+
+gulp.task('build', ['buildCss', 'copyCss', 'copyImg', 'buildJs', 'copyJs', 'buildHtml'])
+
+
+//上线环境的server
+gulp.task('buildServer', function() {
+    serverFun('build');
+})

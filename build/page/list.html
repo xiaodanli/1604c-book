@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="../js/libs/flexible.js"></script>
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/search.css">
+    <link rel="stylesheet" href="../css/common.css">
+</head>
+
+<body>
+    <div class="wrap">
+        <header>
+            <span class="icon-back"></span>
+            <div class="title">女生</div>
+            <span class="icon-home"></span>
+        </header>
+        <div class="list-content">
+            <div class="list-wrap"></div>
+        </div>
+    </div>
+    <script src="../js/libs/require.js"></script>
+    <script>
+        require(['../js/main.js'], function() {
+            require(['list'])
+        })
+    </script>
+</body>
+
+</html>
