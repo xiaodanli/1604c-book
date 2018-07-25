@@ -11,13 +11,14 @@ require.config({
         'base64': './libs/jquery.base64',
 
         //页面js
-        'index': './app/index',
-        'search': './app/search',
-        'list': './app/list',
-        'detail': './app/detail',
-        'chapterList': './app/chapter-list',
-        'login': './app/login',
-        'artical': './app/artical',
+        'index': './app/index/index',
+        'loadRefresh': './app/index/load-refresh',
+        'search': './app/search/index',
+        'list': './app/list/index',
+        'detail': './app/detail/index',
+        'chapterList': './app/chapter-list/index',
+        'login': './app/login/index',
+        'artical': './app/artical/index',
 
         //common
         'GetSlideDirection': './common/direction',

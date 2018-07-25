@@ -1,4 +1,4 @@
-require(['jquery', 'swiper', 'bscroll', 'GetSlideDirection', 'render', 'text!bookTB', 'text!indexTpl', 'text!bookLR', 'storage'], function($, swiper, bscroll, GetSlideDirection, render, bookTB, indexTpl, bookLR, storage) {
+require(['jquery', 'swiper', 'GetSlideDirection', 'render', 'text!bookTB', 'text!indexTpl', 'text!bookLR', 'storage', 'loadRefresh'], function($, swiper, GetSlideDirection, render, bookTB, indexTpl, bookLR, storage, loadRefresh) {
     console.log(bookTB);
 
     $('body').append(indexTpl);
@@ -6,81 +6,8 @@ require(['jquery', 'swiper', 'bscroll', 'GetSlideDirection', 'render', 'text!boo
     $('body').append(bookLR);
 
     //缓存元素
-    var _line = $('.line'),
-        _parent = $('.book-city>div');
+    var _line = $('.line');
 
-    //实例化bscroll
-
-    var cityScroll = new bscroll('.book-city', {
-        probeType: 2,
-        click: true
-    });
-
-    //   44            x
-    // ------  =   --------
-    // 37.5           64   
-    var htmlFz = document.getElementsByTagName('html')[0].style.fontSize;
-
-    var ruleHeight = 44 * parseInt(htmlFz) / 37.5;
-
-    //监听滚动事件
-    cityScroll.on('scroll', function() {
-        if (this.y < this.maxScrollY - ruleHeight) {
-            if (pagenum < total) {
-                _parent.attr('up', '释放加载更多');
-            } else {
-                _parent.attr('up', '已经到底');
-            }
-        } else if (this.y < this.maxScrollY - ruleHeight / 2) {
-            if (pagenum < total) {
-                _parent.attr('up', '上拉加载');
-            } else {
-                _parent.attr('up', '已经到底');
-            }
-        } else if (this.y > ruleHeight) {
-            _parent.attr('down', '释放刷新');
-        }
-    })
-
-    var pagenum = 1,
-        total = 3;
-
-    //监听touchEnd 
-
-    cityScroll.on('touchEnd', function() {
-        if (_parent.attr('up') === '释放加载更多') {
-            console.log("上拉加载更多");
-            if (pagenum < total) {
-                pagenum++;
-                getRecommend(pagenum);
-                _parent.attr('up', '上拉加载');
-            } else {
-                _parent.attr('up', '已经到底');
-            }
-        } else if (_parent.attr('down') === '释放刷新') {
-            location.reload();
-        }
-    })
-
-    getRecommend(pagenum);
-
-    //获取推荐的数据
-    function getRecommend(pagenum) {
-        $.ajax({
-            url: '/api/recommend?pagenum=' + pagenum,
-            dataType: 'json',
-            success: function(res) {
-                console.log(res);
-                if (res.code === 1) {
-                    render("#l-r-tpl", ".loadmore", res.data.items);
-                    cityScroll.refresh();
-                }
-            },
-            error: function(error) {
-                console.warn(error)
-            }
-        })
-    }
 
     //实例化wrap-swiper
     var wrapSwiper;
@@ -209,7 +136,7 @@ require(['jquery', 'swiper', 'bscroll', 'GetSlideDirection', 'render', 'text!boo
 
         wrapSwiper = new swiper('.wrap-swiper');
 
-        cityScroll.refresh();
+        loadRefresh.refresh();
 
     }
     var changeNum = 0;

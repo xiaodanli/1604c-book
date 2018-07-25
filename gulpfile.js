@@ -128,7 +128,7 @@ gulp.task('copyImg', function() {
 //上线js
 
 gulp.task('buildJs', function() {
-    gulp.src('./src/js/{common,app}/*.js')
+    gulp.src('./src/js/{common,app}/**/*.js')
         .pipe(uglify())
         .pipe(gulp.dest('./build/js'))
 })
